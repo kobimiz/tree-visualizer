@@ -1,5 +1,5 @@
-const { Tree } = require('./tree');
-const { TreeVisualizer } = require('./treeVisualizer');
+import { Tree } from './tree'
+import { TreeVisualizer } from './treeVisualizer'
 
 /**
  *           0
@@ -21,6 +21,11 @@ let rectWidth  = 150
 window.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementsByTagName('canvas')[0]
     const ctx = canvas.getContext('2d')
+    if (ctx === null) {
+        console.error("canvas.getContext returns null");
+        return;
+    }
+
     ctx.font = "16px Arial";
     
     // TODO vertical justification (vertican overflow?)

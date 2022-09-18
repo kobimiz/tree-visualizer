@@ -1,5 +1,5 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
+import { app, BrowserWindow } from 'electron'
+import path from 'path'
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -11,9 +11,8 @@ const createWindow = () => {
     })
 
     win.loadFile('index.html')
-}
+};
 
 app.whenReady().then(() => {
     createWindow()
-
-})
+});

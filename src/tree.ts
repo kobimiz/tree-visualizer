@@ -1,15 +1,14 @@
-const { Queue } = require('./queue');
+import { Queue } from './queue';
 
 class Tree {
-    constructor(value, children) {
+    value: any;
+    children: Array<Tree>;
+
+    constructor(value: any, children: Tree | Tree[]) {
         this.value = value;
 
-        if (!(children instanceof Array)) {
-            if (!this.children)
-                this.children = [];
-            else
-                this.children = [children];
-        }
+        if (!(children instanceof Array))
+            this.children = [new Tree(children, [])];
         else
             this.children = children;
     }
@@ -41,7 +40,7 @@ class Tree {
     
     // level with most nodes
     longestTreeLevel() {
-        const nodeCount = this.getLevelsNodeCount(this);
+        const nodeCount = this.getLevelsNodeCount();
         let maxIndex = 0;
         nodeCount.forEach((count, i) => {
             if (nodeCount[maxIndex] < count)
@@ -53,7 +52,7 @@ class Tree {
     getNodesByLevel() {
         let q = new Queue();
         q.enqueue({ node: this, depth: 0 });
-        let res = [];
+        let res : Tree[][] = [];
         
         while (!q.isEmpty()) {
             let { node, depth } = q.dequeue();
@@ -70,13 +69,13 @@ class Tree {
         return res;
     }
 
-    static cloneTreeStructure(tree) {
-        if (!tree) return null;
+    static cloneTreeStructure(tree: Tree) {
+        if (tree.children.length == 0) return new Tree(null, []);
     
-        let children = tree.children.map(child => Tree.cloneTreeStructure(child))
+        let children : Tree[] = tree.children.map(child => Tree.cloneTreeStructure(child))
     
         return new Tree(null, children);
     }
 }
 
-module.exports = { Tree };
+export { Tree }

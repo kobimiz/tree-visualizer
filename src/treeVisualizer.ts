@@ -1,11 +1,13 @@
-const { Tree } = require('./tree');
+import { Tree } from './tree'
 
 class TreeVisualizer {
-    constructor(ctx) {
+    ctx: CanvasRenderingContext2D;
+
+    constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
     }
 
-    drawNode(node, x, y, nodeWidth) {
+    drawNode(node: Tree, x: number, y: number, nodeWidth: number) {
         let sentences = this.splitStringToSentences(node.value, nodeWidth - 20); // padding
         let currY = y + 18;
         for (let i = 0; i < sentences.length; i++) {
@@ -18,7 +20,7 @@ class TreeVisualizer {
         return [nodeWidth, currY - y];
     }
 
-    drawTreeByPos(tree, posTree, rootY, nodeWidth) {
+    drawTreeByPos(tree: Tree, posTree: Tree, rootY: number, nodeWidth: number) {
         if (!tree) return;
 
         let nodeDims = this.drawNode(tree, posTree.value, rootY, nodeWidth);
@@ -34,7 +36,7 @@ class TreeVisualizer {
     }
 
     // TODO take care of node height
-    calculatePositionTree(tree, nodeWidth) {
+    calculatePositionTree(tree: Tree, nodeWidth: number) {
         let res = Tree.cloneTreeStructure(tree);
         const longestLevelIndex = tree.longestTreeLevel();
 
@@ -65,8 +67,8 @@ class TreeVisualizer {
         return res;
     }
 
-    splitStringToSentences(str, maxWidth) {
-        let res = [];
+    splitStringToSentences(str: string, maxWidth: number) {
+        let res : string[] = [];
         let words = str.trim().split(/\s+/)
         if (words.length == 0)
             return res;
@@ -103,4 +105,4 @@ class TreeVisualizer {
     }
 }
 
-module.exports = { TreeVisualizer };
+export { TreeVisualizer }
