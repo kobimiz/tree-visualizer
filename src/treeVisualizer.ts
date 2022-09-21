@@ -47,11 +47,25 @@ class TreeVisualizer {
 
         for (let i = longestLevelIndex - 1; i >= 0; i--) {
             for (let j = 0; j < nodesByLevel[i].length; j++) {
-                let sum = 0;
-                nodesByLevel[i][j].children.forEach(node => {
-                    sum += node.value
-                });
-                nodesByLevel[i][j].value = sum / nodesByLevel[i][j].children.length;
+                if (nodesByLevel[i][j].children.length === 0) {
+                    if (j === 0)
+                        nodesByLevel[i][j].value = 0;
+                    else
+                        nodesByLevel[i][j].value = nodesByLevel[i][j-1].value + nodeWidth  + 10; // TODO parameterize margin
+                } else {
+                    let sum = 0;
+                    nodesByLevel[i][j].children.forEach(node => {
+                        sum += node.value
+                    });
+                    nodesByLevel[i][j].value = sum / nodesByLevel[i][j].children.length;
+                }
+
+                // this is an edge case i ran into where not having children can cause
+                // a node to be before (or in the middle of) its previous sibling
+                if (j > 0 && nodesByLevel[i][j].value < nodesByLevel[i][j-1].value + nodeWidth + 10) {
+                    // TODO parameterize margin
+                    nodesByLevel[i][j].value = nodesByLevel[i][j-1].value + nodeWidth + 10;
+                }
             }
         }
 

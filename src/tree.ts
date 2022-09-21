@@ -3,14 +3,20 @@ import { Queue } from './queue';
 class Tree {
     value: any;
     children: Array<Tree>;
+    parent: Tree | null;
 
     constructor(value: any, children: Tree | Tree[]) {
         this.value = value;
+        this.parent = null;
 
-        if (!(children instanceof Array))
+        if (!(children instanceof Array)) {
             this.children = [new Tree(children, [])];
-        else
+            children.parent = this;
+        }
+        else {
             this.children = children;
+            this.children.forEach(child => child.parent = this);
+        }
     }
 
     getLevelsNodeCount() {
