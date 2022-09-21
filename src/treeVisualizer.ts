@@ -72,7 +72,8 @@ class TreeVisualizer {
         for (let i = longestLevelIndex; i < nodesByLevel.length; i++) {
             for (let j = 0; j < nodesByLevel[i].length; j++) {
                 for (let k = 0; k < nodesByLevel[i][j].children.length; k++) {
-                    nodesByLevel[i][j].children[k].value = nodesByLevel[i][j].value + k * nodeWidth
+                    debugger;
+                    nodesByLevel[i][j].children[k].value = nodesByLevel[i][j].value + k * (nodeWidth + 10); // TODO parameterize margin
                 }
             }
         }
