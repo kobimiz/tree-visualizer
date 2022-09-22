@@ -10,7 +10,29 @@
 </head>
 
 <body>
-    <canvas height="900" width="1600"></canvas>
+    <canvas height="600" width="1600"></canvas>
+
+    <br><br>
+    Enter scans to build a tree (delimiter is a newline character)
+    <br><br>
+    <table border="0">
+        <tr>
+            <td>Post order scan:</td>
+            <td>Pre order scan:</td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="postOrder" cols="45" rows="20"></textarea>
+            </td>
+            <td>
+                <textarea id="preOrder" cols="45" rows="20"></textarea>
+            </td>
+        </tr>
+    </table>
+
+    <input type="button" value="Generate tree" id="generateTree">
+    <br>
+    <span id="error"></span>
 </body>
 
 </html>

@@ -14,6 +14,7 @@ class TreeVisualizer {
             this.ctx.fillText(sentences[i], x + 5, currY);
             currY += 18;
         }
+        this.ctx.beginPath();
         this.ctx.rect(x, y, nodeWidth, currY - y)
         this.ctx.stroke();
 
@@ -28,10 +29,12 @@ class TreeVisualizer {
         tree.children.forEach((child, i) => {
             this.drawTreeByPos(child, posTree.children[i], rootY + 20 + nodeDims[1], nodeWidth);
 
+            this.ctx.strokeStyle = 'red';
             this.ctx.beginPath();
-            this.ctx.moveTo(posTree.value + nodeWidth / 2, rootY + + nodeDims[1])
+            this.ctx.moveTo(posTree.value + nodeWidth / 2, rootY + nodeDims[1])
             this.ctx.lineTo(posTree.children[i].value + nodeWidth / 2, rootY + nodeDims[1] + 20);
             this.ctx.stroke();
+            this.ctx.strokeStyle = 'black';
         });
     }
 
@@ -97,7 +100,6 @@ class TreeVisualizer {
         while (true && limit-- > 0) {
             let rangeTree = this.calculateRangeTree(res, nodeWidth);
             let rangeTreeNodesByLevel = rangeTree.getNodesByLevel();
-            console.log(rangeTreeNodesByLevel);
             
             let isChanged = false;
             for (let level = 0; level < nodesByLevel.length; level++) {

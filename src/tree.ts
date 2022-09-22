@@ -82,6 +82,25 @@ class Tree {
     
         return new Tree(null, children);
     }
+
+    scanPreOrder() {
+        let res: string = this.value;
+        this.children.forEach(child => {
+            res += '\n' + child.scanPreOrder();
+        });
+    
+        return res;
+    }
+    
+    scanPostOrder() {
+        let res: string = '';
+        this.children.forEach(child => {
+            res += child.scanPostOrder() + '\n';
+        });
+    
+        res += this.value;
+        return res;
+    }
 }
 
 export { Tree }

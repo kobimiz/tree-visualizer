@@ -2,42 +2,7 @@ import { Tree } from './tree'
 import { TreeVisualizer } from './treeVisualizer'
 import { TreeBuilder } from './treeBuilder'
 
-/**
- *           0
- *     1   2     3
- *   4  5 6     7
- *                8
- */
-const tree8 = new Tree('8', []);
-const tree7 = new Tree('7', [tree8]);
-const tree3 = new Tree('3', [tree7]);
-const tree4 = new Tree('4', []);
-const tree5 = new Tree('5', []);
-const tree1 = new Tree('1', [tree4, tree5]);
-const tree6 = new Tree('6', []);
-const tree2 = new Tree('2', [tree6]);
-const tree0 = new Tree('0', [tree1, tree2, tree3]);
-
-let rectWidth  = 50
-
-function pre(tree: Tree) {
-    let res: string = tree.value;
-    tree.children.forEach(child => {
-        res += ' ' + pre(child);
-    });
-
-    return res;
-}
-
-function post(tree: Tree) {
-    let res: string = '';
-    tree.children.forEach(child => {
-        res += post(child) + ' ';
-    });
-
-    res += tree.value;
-    return res;
-}
+let rectWidth  = 100;
 
 window.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementsByTagName('canvas')[0]
@@ -48,24 +13,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     ctx.font = "16px Arial";
-    
-    // TODO vertical justification (vertican overflow?)
-    // const treeViz = new TreeVisualizer(ctx)
-    // const posTree = treeViz.calculatePositionTree(tree0, rectWidth);
 
-    // treeViz.drawTreeByPos(tree0, posTree, 100, rectWidth);
-
-
-
-    // let prefix = '0 1 4 5 2 6 3 7 8',
-    //     postfix = '4 5 1 6 2 8 7 3 0';
-
-    // console.log(pre(tree0));
-    // console.log(post(tree0));
-    // console.log(TreeBuilder.treeFromPrePostScan(prefix, postfix));
-
-
-    // let tree = TreeBuilder.generateRandomTree(5, 8);
     let tree23 = new Tree('23', []),
         tree24 = new Tree('24', []),
         tree25 = new Tree('25', []),
@@ -88,15 +36,37 @@ window.addEventListener('DOMContentLoaded', () => {
         tree0 = new Tree('2', [tree1, tree2]);
     
 
-    TreeBuilder.indexTree(tree0);
-    let prefix = pre(tree0),
-    postfix = post(tree0);
-
-    let fromScans = TreeBuilder.treeFromPrePostScan(prefix, postfix)
-
     const treeViz = new TreeVisualizer(ctx)
     const posTree = treeViz.calculatePositionTree(tree0, rectWidth);
-    console.log(posTree);
-    
     treeViz.drawTreeByPos(tree0, posTree, 100, rectWidth);
+    (document.getElementById('preOrder') as HTMLInputElement).value = tree0.scanPreOrder(),
+    (document.getElementById('postOrder') as HTMLInputElement).value = tree0.scanPostOrder(),
+
+
+    document.getElementById('generateTree')?.addEventListener('click', () => {
+        document.getElementsByTagName('input')
+        let preOrder = (document.getElementById('preOrder') as HTMLInputElement).value,
+            postOrder = (document.getElementById('postOrder') as HTMLInputElement).value;
+
+        let fromScans = TreeBuilder.treeFromPrePostScan(preOrder, postOrder);
+        
+        if (fromScans == null) {
+            let errorsElement = document.getElementById('error');
+            if (!errorsElement)
+                throw 'No errors span';
+            errorsElement.textContent = 'Invalid scans';
+            return;
+        }
+
+        ctx.clearRect(0, 0, 1600, 600);
+
+        const treeViz = new TreeVisualizer(ctx)
+        const posTree2 = treeViz.calculatePositionTree(fromScans, rectWidth);
+        
+        treeViz.drawTreeByPos(fromScans, posTree2, 100, rectWidth);
+        let errorsElement = document.getElementById('error');
+        if (!errorsElement)
+            throw 'No errors span';
+        errorsElement.textContent = '';
+});
 })

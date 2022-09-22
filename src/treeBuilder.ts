@@ -2,13 +2,13 @@ import { Queue } from './queue';
 import { Tree } from './tree'
 
 class TreeBuilder {
-    private static treeFromPrePostScanAux(prefix: number[], postfix: number[],
-            startPre: number, endPre: number, reversePreMap : { [key: number]: number },
-            reversePostMap : { [key: number]: number }) {
+    private static treeFromPrePostScanAux(preOrder: string[], postOrder: string[],
+            startPre: number, endPre: number, reversePreMap : { [key: string]: string },
+            reversePostMap : { [key: string]: string }) {
         if (endPre - startPre == 1)
-            return new Tree(prefix[startPre], []);
+            return new Tree(preOrder[startPre], []);
         
-        const root = prefix[startPre];
+        const root = preOrder[startPre];
         let children: Tree[] = [];
 
         // TODO handle when no child
@@ -19,9 +19,9 @@ class TreeBuilder {
 
             while (nextChildIndex < endPre) {
                 nextChildIndex++;
-                if (reversePostMap[prefix[nextChildIndex]] > reversePostMap[prefix[childIndex]]) {
+                if (reversePostMap[preOrder[nextChildIndex]] > reversePostMap[preOrder[childIndex]]) {
                     // start of another child of root
-                    children.push(TreeBuilder.treeFromPrePostScanAux(prefix, postfix, childIndex, nextChildIndex, reversePreMap, reversePostMap));
+                    children.push(TreeBuilder.treeFromPrePostScanAux(preOrder, postOrder, childIndex, nextChildIndex, reversePreMap, reversePostMap));
                     childIndex = nextChildIndex;
                     isNextChildFound = true;
                     break;
@@ -29,7 +29,7 @@ class TreeBuilder {
             }
 
             if (!isNextChildFound) {
-                children.push(TreeBuilder.treeFromPrePostScanAux(prefix, postfix, childIndex, nextChildIndex, reversePreMap, reversePostMap));
+                children.push(TreeBuilder.treeFromPrePostScanAux(preOrder, postOrder, childIndex, nextChildIndex, reversePreMap, reversePostMap));
                 break;
             }
         }
@@ -37,9 +37,12 @@ class TreeBuilder {
         return new Tree(root, children);
     }
 
-    static treeFromPrePostScan(prefix: string, postFix: string) {
-        let prefixNumber  = prefix.split(/\s+/g).map(str => parseInt(str)),
-            postfixNumber = postFix.split(/\s+/g).map(str => parseInt(str));
+    static treeFromPrePostScan(preOrder: string, postOrder: string) {
+        if (preOrder.length == 0)
+            return null;
+
+        let prefixNumber  = preOrder.split(/\n/g),
+            postfixNumber = postOrder.split(/\n/g);
 
         if (prefixNumber.length != postfixNumber.length)
             throw 'Invalid scans';
@@ -47,16 +50,29 @@ class TreeBuilder {
         if (prefixNumber.length == 0)
             return null;
         // TODO add more checks
-
-        let reversePreMap : { [key: number]: number } = {};
+            
+        let reversePreMap : { [key: string]: string } = {};
         for (const key in prefixNumber)
-            reversePreMap[prefixNumber[key]] = parseInt(key);
+            reversePreMap[prefixNumber[key]] = key;
 
-        let reversePostMap : { [key: number]: number } = {};
+        let reversePostMap : { [key: string]: string } = {};
         for (const key in postfixNumber)
-        reversePostMap[postfixNumber[key]] = parseInt(key);
+        reversePostMap[postfixNumber[key]] = key;
     
-        return this.treeFromPrePostScanAux(prefixNumber, postfixNumber, 0, prefixNumber.length, reversePreMap, reversePostMap);
+        let res = this.treeFromPrePostScanAux(prefixNumber, postfixNumber, 0, prefixNumber.length, reversePreMap, reversePostMap);
+
+        console.log('real: ', preOrder);
+        console.log('generated:', res.scanPreOrder());
+        
+        console.log('real: ', postOrder);
+        console.log('generated:', res.scanPostOrder());
+        
+        
+        
+        if (res.scanPreOrder() != preOrder || res.scanPostOrder() != postOrder)
+            return null;
+
+        return res;
     }
 
     static generateRandomTree(depth: number, maxChildren: number) {
@@ -91,7 +107,3 @@ class TreeBuilder {
 }
 
 export { TreeBuilder }
-
-// let x = new Tree(1,[2]);
-
-// console.log('treeBuilder.js', x)
