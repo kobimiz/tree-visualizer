@@ -18,7 +18,7 @@ const tree6 = new Tree('6', []);
 const tree2 = new Tree('2', [tree6]);
 const tree0 = new Tree('0', [tree1, tree2, tree3]);
 
-let rectWidth  = 150
+let rectWidth  = 50
 
 function pre(tree: Tree) {
     let res: string = tree.value;
@@ -71,7 +71,10 @@ window.addEventListener('DOMContentLoaded', () => {
         tree25 = new Tree('25', []),
         tree26 = new Tree('26', []),
         tree27 = new Tree('27', []),
-        tree28 = new Tree('28', []),
+        tree31 = new Tree('31', []),
+        tree30 = new Tree('30', []),
+        tree29 = new Tree('29', []),
+        tree28 = new Tree('28', [tree29,tree30,tree31]),
         tree6 = new Tree('6', []),
         tree17 = new Tree('17', []),
         tree8 = new Tree('8', []),
