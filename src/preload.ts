@@ -14,26 +14,26 @@ window.addEventListener('DOMContentLoaded', () => {
 
     ctx.font = "16px Arial";
 
-    let tree23 = new Tree('23', []),
-        tree24 = new Tree('24', []),
-        tree25 = new Tree('25', []),
-        tree26 = new Tree('26', []),
-        tree27 = new Tree('27', []),
-        tree31 = new Tree('31', []),
-        tree30 = new Tree('30', []),
-        tree29 = new Tree('29', []),
-        tree28 = new Tree('28', [tree29,tree30,tree31]),
-        tree6 = new Tree('6', []),
+    let tree11 = new Tree('11', []),
+        tree12 = new Tree('12', []),
+        tree13 = new Tree('13', []),
+        tree14 = new Tree('14', []),
+        tree15 = new Tree('15', []),
+        tree19 = new Tree('19', []),
+        tree18 = new Tree('18', []),
         tree17 = new Tree('17', []),
-        tree8 = new Tree('8', []),
-        tree14 = new Tree('14', [tree23, tree24]),
-        tree15 = new Tree('15', [tree25]),
-        tree16 = new Tree('16', [tree26, tree27, tree28]),
-        tree5 = new Tree('5', [tree14, tree6]),
-        tree7 = new Tree('7', [tree15, tree16, tree17]),
-        tree1 = new Tree('1', [tree5]),
-        tree2 = new Tree('2', [tree7, tree8]),
-        tree0 = new Tree('2', [tree1, tree2]);
+        tree16 = new Tree('16', [tree17,tree18,tree19]),
+        tree7 = new Tree('7', []),
+        tree10 = new Tree('10', []),
+        tree5 = new Tree('5', []),
+        tree6 = new Tree('6', [tree11, tree12]),
+        tree8 = new Tree('8', [tree13]),
+        tree9 = new Tree('9', [tree14, tree15, tree16]),
+        tree3 = new Tree('3', [tree6, tree7]),
+        tree4 = new Tree('4', [tree8, tree9, tree10]),
+        tree1 = new Tree('1', [tree3]),
+        tree2 = new Tree('2', [tree4, tree5]),
+        tree0 = new Tree('0', [tree1, tree2]);
     
 
     const treeViz = new TreeVisualizer(ctx)
@@ -64,6 +64,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const posTree2 = treeViz.calculatePositionTree(fromScans, rectWidth);
         
         treeViz.drawTreeByPos(fromScans, posTree2, 100, rectWidth);
+
         let errorsElement = document.getElementById('error');
         if (!errorsElement)
             throw 'No errors span';

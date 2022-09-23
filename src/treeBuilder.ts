@@ -3,77 +3,61 @@ import { Tree } from './tree'
 
 class TreeBuilder {
     private static treeFromPrePostScanAux(preOrder: string[], postOrder: string[],
-            startPre: number, endPre: number, reversePreMap : { [key: string]: string },
-            reversePostMap : { [key: string]: string }) {
-        if (endPre - startPre == 1)
-            return new Tree(preOrder[startPre], []);
-        
-        const root = preOrder[startPre];
-        let children: Tree[] = [];
+        startPre: number, endPre: number,
+        reversePostMap : { [key: string]: number }) {
+    if (endPre - startPre == 1)
+        return new Tree(preOrder[startPre].toString(), []);
+    
+    const root = preOrder[startPre].toString();
+    let children: Tree[] = [];
 
-        // TODO handle when no child
-        let childIndex = startPre + 1
-        while (childIndex < endPre) {
-            let nextChildIndex = childIndex;
-            let isNextChildFound = false;
+    // TODO handle when no child
+    let childIndex = startPre + 1
+    while (childIndex < endPre) {
+        let nextChildIndex = childIndex;
+        let isNextChildFound = false;
 
-            while (nextChildIndex < endPre) {
-                nextChildIndex++;
-                if (reversePostMap[preOrder[nextChildIndex]] > reversePostMap[preOrder[childIndex]]) {
-                    // start of another child of root
-                    children.push(TreeBuilder.treeFromPrePostScanAux(preOrder, postOrder, childIndex, nextChildIndex, reversePreMap, reversePostMap));
-                    childIndex = nextChildIndex;
-                    isNextChildFound = true;
-                    break;
-                }
-            }
-
-            if (!isNextChildFound) {
-                children.push(TreeBuilder.treeFromPrePostScanAux(preOrder, postOrder, childIndex, nextChildIndex, reversePreMap, reversePostMap));
+        while (nextChildIndex < endPre) {
+            nextChildIndex++;
+            if (reversePostMap[preOrder[nextChildIndex]] > reversePostMap[preOrder[childIndex]]) {
+                // start of another child of root
+                children.push(TreeBuilder.treeFromPrePostScanAux(preOrder, postOrder, childIndex, nextChildIndex, reversePostMap));
+                childIndex = nextChildIndex;
+                isNextChildFound = true;
                 break;
             }
         }
 
-        return new Tree(root, children);
+        if (!isNextChildFound) {
+            children.push(TreeBuilder.treeFromPrePostScanAux(preOrder, postOrder, childIndex, nextChildIndex, reversePostMap));
+            break;
+        }
     }
 
-    static treeFromPrePostScan(preOrder: string, postOrder: string) {
-        if (preOrder.length == 0)
-            return null;
+    return new Tree(root, children);
+}
 
-        let prefixNumber  = preOrder.split(/\n/g),
-            postfixNumber = postOrder.split(/\n/g);
+static treeFromPrePostScan(preOrder: string, postOrder: string) {
+    let prefixNumber  = preOrder.split(/\n/g),
+        postfixNumber = postOrder.split(/\n/g);
 
-        if (prefixNumber.length != postfixNumber.length)
-            throw 'Invalid scans';
-        
-        if (prefixNumber.length == 0)
-            return null;
-        // TODO add more checks
-            
-        let reversePreMap : { [key: string]: string } = {};
-        for (const key in prefixNumber)
-            reversePreMap[prefixNumber[key]] = key;
-
-        let reversePostMap : { [key: string]: string } = {};
-        for (const key in postfixNumber)
-        reversePostMap[postfixNumber[key]] = key;
+    if (prefixNumber.length != postfixNumber.length)
+        throw 'Invalid scans';
     
-        let res = this.treeFromPrePostScanAux(prefixNumber, postfixNumber, 0, prefixNumber.length, reversePreMap, reversePostMap);
+    if (prefixNumber.length == 0)
+        return null;
+    // TODO add more checks
 
-        console.log('real: ', preOrder);
-        console.log('generated:', res.scanPreOrder());
-        
-        console.log('real: ', postOrder);
-        console.log('generated:', res.scanPostOrder());
-        
-        
-        
-        if (res.scanPreOrder() != preOrder || res.scanPostOrder() != postOrder)
-            return null;
+    let i = 0;
+    let reversePostMap : { [key: string]: number } = {};
+    for (const key in postfixNumber)
+        reversePostMap[postfixNumber[key]] = i++;
 
-        return res;
-    }
+    let res = this.treeFromPrePostScanAux(prefixNumber, postfixNumber, 0, prefixNumber.length, reversePostMap);
+    if (res.scanPreOrder() != preOrder || res.scanPostOrder() != postOrder)
+        return null;
+    return res;
+}
 
     static generateRandomTree(depth: number, maxChildren: number) {
         if (depth == 1)
